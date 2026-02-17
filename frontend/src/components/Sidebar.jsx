@@ -1,6 +1,21 @@
+import { NavLink } from "react-router-dom";
+import { HiHome, HiChartBar, HiViewGrid, HiScale, HiCollection, HiSwitchHorizontal } from "react-icons/hi";
+import SearchBar from "./SearchBar";
+import WatchlistManager from "./WatchlistManager";
+import AlertManager from "./AlertManager";
+
+const navLinks = [
+  { to: "/", icon: HiHome, label: "Dashboard" },
+  { to: "/market", icon: HiChartBar, label: "Market" },
+  { to: "/heatmap", icon: HiViewGrid, label: "Heatmap" },
+  { to: "/compare", icon: HiScale, label: "Compare" },
+  { to: "/portfolio", icon: HiCollection, label: "Portfolio" },
+  { to: "/trading", icon: HiSwitchHorizontal, label: "Trading" },
+];
+
 export default function Sidebar({ stocks, selected, setSelected }) {
   return (
-    <div className="w-72 bg-[#0b1022] border-r border-slate-800/60 flex flex-col">
+    <div className="w-72 bg-[#0b1022] border-r border-slate-800/60 flex flex-col h-full">
       {/* Logo */}
       <div className="px-6 py-5 border-b border-slate-800/60">
         <div className="flex items-center gap-3">
@@ -17,12 +32,40 @@ export default function Sidebar({ stocks, selected, setSelected }) {
         </div>
       </div>
 
-      {/* Watchlist */}
-      <div className="px-4 pt-5 pb-2">
-        <p className="text-[10px] font-semibold text-slate-500 uppercase tracking-widest px-2">Watchlist</p>
+      {/* Search */}
+      <div className="px-3 pt-3">
+        <SearchBar />
       </div>
 
-      <div className="flex-1 overflow-y-auto px-3 pb-4">
+      {/* Navigation */}
+      <nav className="px-3 pt-3 pb-2">
+        {navLinks.map(({ to, icon: Icon, label }) => (
+          <NavLink
+            key={to}
+            to={to}
+            end={to === "/"}
+            className={({ isActive }) =>
+              `flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm mb-0.5 transition ${
+                isActive
+                  ? "bg-blue-500/10 text-blue-400 font-medium"
+                  : "text-slate-400 hover:bg-slate-800/50 hover:text-white"
+              }`
+            }
+          >
+            <Icon className="w-4 h-4" />
+            {label}
+          </NavLink>
+        ))}
+      </nav>
+
+      <div className="border-t border-slate-800/60 mt-1" />
+
+      {/* Stock Watchlist */}
+      <div className="px-4 pt-3 pb-2">
+        <p className="text-[10px] font-semibold text-slate-500 uppercase tracking-widest px-2">Live Prices</p>
+      </div>
+
+      <div className="flex-1 overflow-y-auto px-3 pb-2">
         {stocks.map((stock) => {
           const positive = stock.percent_change >= 0;
           const isActive = stock.symbol === selected;
@@ -31,26 +74,23 @@ export default function Sidebar({ stocks, selected, setSelected }) {
             <div
               key={stock.symbol}
               onClick={() => setSelected(stock.symbol)}
-              className={`
-                cursor-pointer rounded-lg px-3 py-3 mb-1 transition-all duration-150
+              className={`cursor-pointer rounded-lg px-3 py-2.5 mb-0.5 transition-all duration-150
                 ${isActive
                   ? "bg-blue-500/10 border border-blue-500/20"
                   : "border border-transparent hover:bg-slate-800/50"
-                }
-              `}
+                }`}
             >
               <div className="flex items-center justify-between">
                 <div>
-                  <p className={`text-sm font-semibold ${isActive ? "text-blue-400" : "text-slate-200"}`}>
+                  <p className={`text-xs font-semibold ${isActive ? "text-blue-400" : "text-slate-200"}`}>
                     {stock.symbol.replace(".NS", "")}
                   </p>
-                  <p className="text-[11px] text-slate-500 mt-0.5">NSE</p>
                 </div>
                 <div className="text-right">
-                  <p className="text-sm font-medium text-slate-200">
+                  <p className="text-xs font-medium text-slate-200">
                     {stock.current_price.toLocaleString("en-IN", { minimumFractionDigits: 2 })}
                   </p>
-                  <p className={`text-[11px] font-medium mt-0.5 ${positive ? "text-emerald-400" : "text-red-400"}`}>
+                  <p className={`text-[10px] font-medium ${positive ? "text-emerald-400" : "text-red-400"}`}>
                     {positive ? "+" : ""}{stock.percent_change.toFixed(2)}%
                   </p>
                 </div>
@@ -58,6 +98,13 @@ export default function Sidebar({ stocks, selected, setSelected }) {
             </div>
           );
         })}
+      </div>
+
+      <div className="border-t border-slate-800/60" />
+
+      {/* Watchlist Manager */}
+      <div className="pt-2">
+        <WatchlistManager onSelectSymbol={setSelected} />
       </div>
     </div>
   );

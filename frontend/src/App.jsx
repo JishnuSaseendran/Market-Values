@@ -1,77 +1,68 @@
-import { useEffect, useState } from "react";
-import Sidebar from "./components/Sidebar";
-import TickerCard from "./components/TickerCard";
-import Chart from "./components/Chart";
+import { useEffect } from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Toaster } from "react-hot-toast";
 
-const WS_URL = `ws://${window.location.host}/ws/stocks`;
+import useStockStore from "./stores/stockStore";
+import useThemeStore from "./stores/themeStore";
+import useAlertStore from "./stores/alertStore";
+
+import Layout from "./components/Layout";
+import ProtectedRoute from "./components/ProtectedRoute";
+import LoginPage from "./pages/LoginPage";
+import RegisterPage from "./pages/RegisterPage";
+import DashboardPage from "./pages/DashboardPage";
+import PortfolioPage from "./pages/PortfolioPage";
+import SettingsPage from "./pages/SettingsPage";
+import MarketOverviewPage from "./pages/MarketOverviewPage";
+import HeatmapPage from "./pages/HeatmapPage";
+import ComparePage from "./pages/ComparePage";
+import TradingPage from "./pages/TradingPage";
+import UpstoxCallbackPage from "./pages/UpstoxCallbackPage";
 
 export default function App() {
-  const [stocks, setStocks] = useState([]);
-  const [selected, setSelected] = useState("RELIANCE.NS");
-  const [connected, setConnected] = useState(false);
+  const connect = useStockStore((s) => s.connect);
+  const disconnect = useStockStore((s) => s.disconnect);
+  const onAlert = useStockStore((s) => s.onAlert);
+  const initTheme = useThemeStore((s) => s.initTheme);
+  const addTriggered = useAlertStore((s) => s.addTriggered);
+  const requestPermission = useAlertStore((s) => s.requestNotificationPermission);
 
   useEffect(() => {
-    const ws = new WebSocket(WS_URL);
-
-    ws.onopen = () => setConnected(true);
-    ws.onclose = () => setConnected(false);
-
-    ws.onmessage = (event) => {
-      setStocks(JSON.parse(event.data));
-    };
-
-    return () => ws.close();
+    initTheme();
+    connect();
+    requestPermission();
+    const unsub = onAlert(addTriggered);
+    return () => { disconnect(); unsub(); };
   }, []);
 
   return (
-    <div className="flex h-screen overflow-hidden">
-      <Sidebar stocks={stocks} selected={selected} setSelected={setSelected} />
-
-      <div className="flex-1 flex flex-col min-w-0">
-        {/* Header */}
-        <header className="flex items-center justify-between px-8 py-4 border-b border-slate-800/60">
-          <div>
-            <h1 className="text-xl font-bold text-white tracking-tight">Market Overview</h1>
-            <p className="text-xs text-slate-500 mt-0.5">Indian Stock Exchange - NSE</p>
-          </div>
-          <div className="flex items-center gap-2">
-            <span
-              className={`inline-block w-2 h-2 rounded-full ${
-                connected ? "bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.5)]" : "bg-red-400"
-              }`}
-            />
-            <span className="text-xs text-slate-400">
-              {connected ? "Live" : "Disconnected"}
-            </span>
-          </div>
-        </header>
-
-        {/* Content */}
-        <div className="flex-1 overflow-y-auto p-8">
-          {/* Ticker Cards */}
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-8">
-            {stocks.map((stock) => (
-              <TickerCard
-                key={stock.symbol}
-                stock={stock}
-                isSelected={stock.symbol === selected}
-                onClick={() => setSelected(stock.symbol)}
-              />
-            ))}
-          </div>
-
-          {/* Chart */}
-          <div className="bg-[#0f1629] rounded-xl border border-slate-800/60 p-6">
-            <div className="flex items-center justify-between mb-4">
-              <div>
-                <h2 className="text-lg font-semibold text-white">{selected.replace(".NS", "")}</h2>
-                <p className="text-xs text-slate-500">Intraday - 5 min intervals</p>
-              </div>
-            </div>
-            <Chart symbol={selected} />
-          </div>
-        </div>
-      </div>
-    </div>
+    <BrowserRouter>
+      <Toaster
+        position="top-right"
+        toastOptions={{
+          style: { background: "#1e293b", color: "#e2e8f0", border: "1px solid #334155" },
+        }}
+      />
+      <Routes>
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
+        <Route path="/upstox/callback" element={<UpstoxCallbackPage />} />
+        <Route
+          element={
+            <ProtectedRoute>
+              <Layout />
+            </ProtectedRoute>
+          }
+        >
+          <Route path="/" element={<DashboardPage />} />
+          <Route path="/portfolio" element={<PortfolioPage />} />
+          <Route path="/settings" element={<SettingsPage />} />
+          <Route path="/market" element={<MarketOverviewPage />} />
+          <Route path="/heatmap" element={<HeatmapPage />} />
+          <Route path="/compare" element={<ComparePage />} />
+          <Route path="/trading" element={<TradingPage />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
   );
 }

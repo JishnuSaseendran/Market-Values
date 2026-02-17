@@ -2,3 +2,16 @@ fastapi
 uvicorn[standard]
 yfinance
 pandas
+sqlalchemy
+aiosqlite
+alembic
+redis
+python-dotenv
+python-jose[cryptography]
+passlib[bcrypt]
+bcrypt==4.0.1
+slowapi
+httpx
+ta
+feedparser
+upstox-python-sdk

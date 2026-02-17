@@ -7,6 +7,12 @@ services:
       dockerfile: Dockerfile.backend
     ports:
       - "8000:8000"
+    env_file:
+      - .env
+    volumes:
+      - db-data:/app/data
+    depends_on:
+      - redis
 
   frontend:
     build:
@@ -17,4 +23,13 @@ services:
     depends_on:
       - backend
 
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
 
+volumes:
+  db-data:
+  redis-data:
