@@ -12,7 +12,7 @@ from app.config import STOCK_CODES
 from app.services.stocks import fetch_all_stocks
 from app.services.alerts import check_alerts
 
-from app.routers import auth, stocks, watchlists, portfolio, alerts, news, market, preferences, upstox
+from app.routers import auth, stocks, watchlists, portfolio, alerts, news, market, preferences, upstox, prediction
 
 setup_logging()
 logger = logging.getLogger(__name__)
@@ -64,6 +64,7 @@ app.include_router(news.router)
 app.include_router(market.router)
 app.include_router(preferences.router)
 app.include_router(upstox.router)
+app.include_router(prediction.router)
 
 
 @app.get("/")

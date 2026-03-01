@@ -18,6 +18,7 @@ import HeatmapPage from "./pages/HeatmapPage";
 import ComparePage from "./pages/ComparePage";
 import TradingPage from "./pages/TradingPage";
 import UpstoxCallbackPage from "./pages/UpstoxCallbackPage";
+import PredictionPage from "./pages/PredictionPage";
 
 export default function App() {
   const connect = useStockStore((s) => s.connect);
@@ -61,6 +62,7 @@ export default function App() {
           <Route path="/heatmap" element={<HeatmapPage />} />
           <Route path="/compare" element={<ComparePage />} />
           <Route path="/trading" element={<TradingPage />} />
+          <Route path="/predict" element={<PredictionPage />} />
         </Route>
       </Routes>
     </BrowserRouter>

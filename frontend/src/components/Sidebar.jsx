@@ -1,5 +1,5 @@
 import { NavLink } from "react-router-dom";
-import { HiHome, HiChartBar, HiViewGrid, HiScale, HiCollection, HiSwitchHorizontal } from "react-icons/hi";
+import { HiHome, HiChartBar, HiViewGrid, HiScale, HiCollection, HiLightningBolt, HiSparkles } from "react-icons/hi";
 import SearchBar from "./SearchBar";
 import WatchlistManager from "./WatchlistManager";
 import AlertManager from "./AlertManager";
@@ -10,7 +10,6 @@ const navLinks = [
   { to: "/heatmap", icon: HiViewGrid, label: "Heatmap" },
   { to: "/compare", icon: HiScale, label: "Compare" },
   { to: "/portfolio", icon: HiCollection, label: "Portfolio" },
-  { to: "/trading", icon: HiSwitchHorizontal, label: "Trading" },
 ];
 
 export default function Sidebar({ stocks, selected, setSelected }) {
@@ -45,10 +44,10 @@ export default function Sidebar({ stocks, selected, setSelected }) {
             to={to}
             end={to === "/"}
             className={({ isActive }) =>
-              `flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm mb-0.5 transition ${
+              `flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm mb-0.5 transition-all duration-150 ${
                 isActive
-                  ? "bg-blue-500/10 text-blue-400 font-medium"
-                  : "text-slate-400 hover:bg-slate-800/50 hover:text-white"
+                  ? "bg-blue-500/10 text-blue-400 font-medium border-l-2 border-blue-400"
+                  : "text-slate-400 hover:bg-slate-800/50 hover:text-white border-l-2 border-transparent"
               }`
             }
           >
@@ -57,6 +56,43 @@ export default function Sidebar({ stocks, selected, setSelected }) {
           </NavLink>
         ))}
       </nav>
+
+      {/* Trading + AI Predict — separated with distinct styling */}
+      <div className="px-3 pb-2">
+        <p className="text-[10px] font-semibold text-slate-600 uppercase tracking-widest px-3 mb-1.5">Live Trading</p>
+        <NavLink
+          to="/trading"
+          className={({ isActive }) =>
+            `trading-shimmer flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm transition-all duration-200 ${
+              isActive
+                ? "bg-violet-500/15 text-violet-300 font-semibold border border-violet-500/30 shadow-[0_0_16px_rgba(139,92,246,0.15)]"
+                : "text-violet-400/80 hover:bg-violet-500/10 hover:text-violet-300 border border-transparent"
+            }`
+          }
+        >
+          <HiLightningBolt className="w-4 h-4" />
+          <span className="flex-1">Trading</span>
+          <span className="text-[9px] font-bold bg-violet-500/20 text-violet-300 px-1.5 py-0.5 rounded-full tracking-wider">
+            LIVE
+          </span>
+        </NavLink>
+        <NavLink
+          to="/predict"
+          className={({ isActive }) =>
+            `flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm transition-all duration-200 mt-0.5 ${
+              isActive
+                ? "bg-indigo-500/15 text-indigo-300 font-semibold border border-indigo-500/30 shadow-[0_0_16px_rgba(99,102,241,0.15)]"
+                : "text-indigo-400/80 hover:bg-indigo-500/10 hover:text-indigo-300 border border-transparent"
+            }`
+          }
+        >
+          <HiSparkles className="w-4 h-4" />
+          <span className="flex-1">AI Predict</span>
+          <span className="text-[9px] font-bold bg-indigo-500/20 text-indigo-300 px-1.5 py-0.5 rounded-full tracking-wider">
+            LSTM
+          </span>
+        </NavLink>
+      </div>
 
       <div className="border-t border-slate-800/60 mt-1" />
 

@@ -57,3 +57,30 @@ body {
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
+
+/* Page transition */
+.page-enter {
+  animation: fade-in 0.3s ease-out;
+}
+
+/* Trading nav shimmer effect */
+.trading-shimmer {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(139, 92, 246, 0.08) 50%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+}
+.trading-shimmer:hover {
+  animation: shimmer 2s linear infinite;
+}
+
+/* Upstox gradient text */
+.upstox-gradient-text {
+  background: linear-gradient(135deg, #8b5cf6, #6366f1);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}

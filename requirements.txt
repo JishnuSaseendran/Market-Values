@@ -15,3 +15,5 @@ httpx
 ta
 feedparser
 upstox-python-sdk
+tensorflow
+scikit-learn
