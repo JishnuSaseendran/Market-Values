@@ -93,6 +93,21 @@ Market-Values/
 
 ---
 
+## Ports
+
+| Service | Mode | Port | URL |
+|---------|------|------|-----|
+| Backend (FastAPI) | Local dev & Docker | `8000` | http://localhost:8000 |
+| Frontend (Vite) | Local dev only | `5173` | http://localhost:5173 |
+| Frontend (Nginx) | Docker only | `3000` | http://localhost:3000 |
+| Redis | Docker | `6379` | internal |
+
+In local dev, the Vite dev server (`5173`) proxies all `/api` and `/ws` traffic to the backend on `8000`, so you never need to configure CORS manually.
+
+In Docker, Nginx on `3000` serves the React build and proxies `/api` and `/ws` to the backend container on `8000` internally.
+
+---
+
 ## Getting Started
 
 ### Prerequisites

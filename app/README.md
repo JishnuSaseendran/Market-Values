@@ -94,7 +94,15 @@ alembic downgrade -1
 uvicorn app.main:app --reload --port 8000
 ```
 
-API docs available at http://localhost:8000/docs
+The backend always runs on port **`8000`**, both locally and in Docker.
+
+| URL | Description |
+|-----|-------------|
+| http://localhost:8000 | API root |
+| http://localhost:8000/docs | Swagger UI (interactive API docs) |
+| http://localhost:8000/redoc | ReDoc API docs |
+| ws://localhost:8000/ws/stocks | Stock price WebSocket |
+| ws://localhost:8000/ws/upstox | Upstox live feed WebSocket |
 
 ---
 

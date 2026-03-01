@@ -97,6 +97,16 @@ frontend/
 - Node.js 18+
 - Backend running at `http://localhost:8000`
 
+### Ports
+
+| Mode | Port | URL |
+|------|------|-----|
+| Local dev (Vite) | `5173` | http://localhost:5173 |
+| Docker (Nginx) | `3000` | http://localhost:3000 |
+
+In local dev, Vite proxies `/api` and `/ws` to the backend at `http://localhost:8000` — no CORS configuration needed.
+In Docker, Nginx serves the production build on port `3000` and proxies API/WebSocket traffic to the backend container internally.
+
 ### Install and Run
 
 ```bash
@@ -106,8 +116,6 @@ npm run build        # Production build
 npm run preview      # Preview production build locally
 npm test             # Run unit tests
 ```
-
-The Vite dev server proxies all `/api` and `/ws` requests to `http://localhost:8000`, so no CORS issues during development.
 
 ---
 
